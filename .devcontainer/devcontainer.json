@@ -1,0 +1,10 @@
+{
+    "name": "Rust workspace",
+    "build": { "dockerfile": "Dockerfile" },
+    "settings": {
+        "terminal.integrated.profiles.linux": { "zsh": { "path": "/usr/bin/zsh" }},
+        "terminal.integrated.defaultProfile.linux": "zsh"
+    },
+    "mounts": [ "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached" ],
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
+}
