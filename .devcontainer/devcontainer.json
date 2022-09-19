@@ -1,8 +1,20 @@
 {
     "name": "Rust workspace",
     "build": { "dockerfile": "Dockerfile" },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "bungcip.better-toml",
+                "vadimcn.vscode-lldb",
+                "vivaxy.vscode-conventional-commits",
+                "serayuzgur.crates",
+                "rust-lang.rust-analyzer",
+                "usernamehw.errorlens"
+            ]
+        }
+    },
     "settings": {
-        "terminal.integrated.profiles.linux": { "zsh": { "path": "/usr/bin/zsh" }},
+        "terminal.integrated.profiles.linux": {"zsh": { "path": "/usr/bin/zsh" }},
         "terminal.integrated.defaultProfile.linux": "zsh"
     },
     "mounts": [ "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached" ],
