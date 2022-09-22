@@ -1,3 +1,4 @@
+use dotenv::dotenv;
 use std::env;
 
 use futures::StreamExt;
@@ -5,6 +6,8 @@ use telegram_bot::*;
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
+    dotenv().ok();
+
     let token = env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN not set");
     let api = Api::new(token);
 
