@@ -1,0 +1,23 @@
+version: '3.4'
+services:
+  workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sleep infinity
+    volumes:
+      - ..:/simple-note-bot:cached
+      - ${SSH_DIR}:/root/.ssh:cached
+      - ${GIT_DIR}:/etc/gitconfig:cached
+    network_mode: service:db
+    depends_on:
+      - db
+  db:
+    image: postgres:alpine
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: password

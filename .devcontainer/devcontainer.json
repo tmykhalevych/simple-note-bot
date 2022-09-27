@@ -1,6 +1,9 @@
 {
-    "name": "Rust workspace",
-    "build": { "dockerfile": "Dockerfile" },
+    "name": "workspace",
+    "dockerComposeFile": [ "docker-compose.yml" ],
+    "service": "workspace",
+    "workspaceFolder": "/simple-note-bot",
+    "forwardPorts": [ 5432 ],
     "customizations": {
         "vscode": {
             "extensions": [
@@ -17,9 +20,5 @@
         "terminal.integrated.profiles.linux": { "zsh": { "path": "/usr/bin/zsh" }},
         "terminal.integrated.defaultProfile.linux": "zsh"
     },
-    "mounts": [
-        "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
-        "source=${localEnv:HOME}/.gitconfig,target=/etc/gitconfig,type=bind,consistency=cached"
-    ],
-    "postCreateCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
+    "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder}"
 }

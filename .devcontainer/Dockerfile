@@ -12,9 +12,6 @@ ENV PATH="/root/.cargo/bin:${PATH}"
 RUN apt-get install -y libpq-dev
 RUN cargo install diesel_cli --no-default-features --features postgres
 
-# RUN apt-get install -y postgresql postgresql-contrib
-# RUN service postgresql start
-
 RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v1.1.2/zsh-in-docker.sh)" -- \
     -t robbyrussell \
     -p git \
