@@ -1,8 +1,13 @@
+mod db;
+
 use dotenv::dotenv;
 use std::env;
 
 use futures::StreamExt;
 use telegram_bot::*;
+
+// temporary
+#[allow(unused_variables)]
 
 #[tokio::main]
 async fn main() -> Result<(), Error> {
@@ -10,6 +15,7 @@ async fn main() -> Result<(), Error> {
 
     let token = env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN not set");
     let api = Api::new(token);
+    let db_connection = db::establish_connection();
 
     // Fetch new updates via long poll method
     let mut stream = api.stream();
