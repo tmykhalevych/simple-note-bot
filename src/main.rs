@@ -1,4 +1,9 @@
 mod db;
+mod schema;
+mod models;
+mod controllers;
+
+use controllers::*;
 
 use dotenv::dotenv;
 use std::env;
@@ -6,16 +11,13 @@ use std::env;
 use futures::StreamExt;
 use telegram_bot::*;
 
-// temporary
-#[allow(unused_variables)]
-
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     dotenv().ok();
 
     let token = env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN not set");
     let api = Api::new(token);
-    let db_connection = db::establish_connection();
+    let mut db_connection = db::establish_connection();
 
     // Fetch new updates via long poll method
     let mut stream = api.stream();
@@ -33,6 +35,9 @@ async fn main() -> Result<(), Error> {
                     &message.from.first_name, data
                 )))
                 .await?;
+            }
+            else {
+                DefaultController::create_with(&mut db_connection, &api).handle(message).await;
             }
         }
     }

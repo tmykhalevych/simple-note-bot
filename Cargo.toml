@@ -9,5 +9,7 @@ edition = "2021"
 futures = "0.3.24"
 tokio = { version = "^0.2", features = ["full"] }
 telegram-bot = "0.8.0"
-diesel = { version = "2.0.0", features = ["postgres"] }
+diesel = { version = "2.0.0", features = ["postgres", "chrono"] }
 dotenv = "0.15.0"
+chrono = "0.4.0"
+async-trait = "0.1.57"
