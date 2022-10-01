@@ -37,7 +37,11 @@ async fn main() -> Result<(), Error> {
                 .await?;
             }
             else {
-                DefaultController::create_with(&mut db_connection, &api).handle(message).await;
+                
+                DefaultController::new(message)
+                    .with(&mut db_connection, &api)
+                    .handle()
+                    .await;
             }
         }
     }
