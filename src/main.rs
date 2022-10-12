@@ -3,8 +3,6 @@ mod schema;
 mod models;
 mod controllers;
 
-use controllers::*;
-
 use dotenv::dotenv;
 use std::env;
 
@@ -38,7 +36,7 @@ async fn main() -> Result<(), Error> {
             }
             else {
                 
-                DefaultController::new(message)
+                controllers::Builder::new(message)
                     .with(&mut db_connection, &api)
                     .handle()
                     .await;
