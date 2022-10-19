@@ -3,7 +3,7 @@ pub mod text;
 
 use default::*;
 use text::*;
-use telegram_bot::{Message, Api};
+use telegram_bot::{Update, MessageKind, UpdateKind, Api};
 use diesel::PgConnection;
 use async_trait::async_trait;
 
@@ -13,23 +13,25 @@ pub trait Controller<'a> {
 }
 
 pub struct Builder {
-    message: Message
+    update: Update
 }
 
 impl Builder {
-    pub fn new(message: Message) -> Self {
+    pub fn new(update: Update) -> Self {
         Self {
-            message: message
+            update: update
         }
     }
 
-    pub fn with<'a>(self, db: &'a mut PgConnection, api: &Api) -> Box<dyn Controller<'a>> {
-        // todo: temporary code here
-        if true {
-            Box::new(DefaultController { message: self.message, api: api.clone() })
+    pub fn with<'a>(self, db: &'a mut PgConnection, api: &Api) -> Result<Box<dyn Controller<'a>>, String> {
+        if let UpdateKind::Message(message) = self.update.kind {
+            match &message.kind {
+                MessageKind::Text { data, .. } => Ok(Box::new(TextController { text: data.clone(), message: message, api: api.clone() })),
+                _ => Ok(Box::new(DefaultController { message: message, api: api.clone() }))
+            }
         }
         else {
-            Box::new(TextController { text: "".to_owned(), message: self.message, api: api.clone() }) 
+            Err("The update in not a message".to_owned())
         }
     }
 }
