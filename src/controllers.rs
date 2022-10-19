@@ -1,8 +1,10 @@
 pub mod default;
 pub mod text;
+pub mod voice;
 
 use default::*;
 use text::*;
+use voice::*;
 use telegram_bot::{Update, MessageKind, UpdateKind, Api};
 use diesel::PgConnection;
 use async_trait::async_trait;
@@ -27,6 +29,7 @@ impl Builder {
         if let UpdateKind::Message(message) = self.update.kind {
             match &message.kind {
                 MessageKind::Text { data, .. } => Ok(Box::new(TextController { text: data.clone(), message: message, api: api.clone() })),
+                MessageKind::Voice { data } => Ok(Box::new(VoiceController { audio: data.clone(), message: message, api: api.clone() })),
                 _ => Ok(Box::new(DefaultController { message: message, api: api.clone() }))
             }
         }
