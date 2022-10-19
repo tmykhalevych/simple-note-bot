@@ -3,9 +3,9 @@ use async_trait::async_trait;
 use super::Controller;
 
 pub struct VoiceController {
-    pub audio: Voice,
-    pub message: Message,
-    pub api: Api
+    pub(super) audio: Voice,
+    pub(super) message: Message,
+    pub(super) api: Api
 }
 
 #[async_trait(?Send)]

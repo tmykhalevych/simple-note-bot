@@ -3,8 +3,8 @@ use async_trait::async_trait;
 use super::Controller;
 
 pub struct DefaultController {
-    pub message: Message,
-    pub api: Api
+    pub(super) message: Message,
+    pub(super) api: Api
 }
 
 impl DefaultController {

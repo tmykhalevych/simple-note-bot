@@ -3,9 +3,9 @@ use async_trait::async_trait;
 use super::Controller;
 
 pub struct TextController {
-    pub text: String,
-    pub message: Message,
-    pub api: Api
+    pub(super) text: String,
+    pub(super) message: Message,
+    pub(super) api: Api
 }
 
 #[async_trait(?Send)]
