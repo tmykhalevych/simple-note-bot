@@ -27,10 +27,13 @@ impl Builder {
 
     pub fn with<'a>(self, db: &'a mut PgConnection, api: &Api) -> Result<Box<dyn Controller<'a>>, String> {
         if let UpdateKind::Message(message) = self.update.kind {
-            match &message.kind {
-                MessageKind::Text { data, .. } => Ok(Box::new(TextController { text: data.clone(), message: message, api: api.clone() })),
-                MessageKind::Voice { data } => Ok(Box::new(VoiceController { audio: data.clone(), message: message, api: api.clone() })),
-                _ => Ok(Box::new(DefaultController { message: message, api: api.clone() }))
+            match message.kind {
+                MessageKind::Text { data, .. } =>
+                    Ok(Box::new(TextController { text: data, user: message.from, chat: message.chat, api: api.clone() })),
+                MessageKind::Voice { data } =>
+                    Ok(Box::new(VoiceController { audio: data, user: message.from, chat: message.chat, api: api.clone() })),
+                _ =>
+                    Ok(Box::new(DefaultController { user: message.from, chat: message.chat, api: api.clone() }))
             }
         }
         else {
