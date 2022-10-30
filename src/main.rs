@@ -20,9 +20,8 @@ async fn main() -> Result<(), Error> {
 
     while let Some(update) = stream.next().await {
         let update = update?;
-        match controllers::Builder::new(update).with(&mut db_connection, &api) {
-            Ok(mut controller) => controller.handle().await,
-            Err(err_msg) => println!("{err_msg}"),
+        if let Some(mut controller) = controllers::Builder::new(update).with(&mut db_connection, &api) {
+            controller.handle().await;
         }
     }
 
