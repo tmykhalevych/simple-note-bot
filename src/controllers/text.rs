@@ -1,23 +1,21 @@
-use telegram_bot::{Api, User, MessageChat, SendMessage};
+use telegram_bot::SendMessage;
 use async_trait::async_trait;
-use super::Controller;
+use super::{Controller, BaseController};
 
-pub struct TextController {
+pub struct TextController<'a> {
     pub(super) text: String,
-    pub(super) user: User,
-    pub(super) chat: MessageChat,
-    pub(super) api: Api
+    pub(super) base: BaseController<'a>
 }
 
 #[async_trait(?Send)]
-impl<'a> Controller<'a> for TextController {
+impl<'a> Controller<'a> for TextController<'a> {
     async fn handle(&mut self) {
 
         // todo: Implement something more sophisticated
 
-        let user_name = &self.user.first_name;
+        let user_name = &self.base.user.first_name;
         let response = format!("Hey {}! You just wrote '{}'", user_name, &self.text);
-        self.api.send(SendMessage::new(&self.chat, response)).await.ok();
+        self.base.api.send(SendMessage::new(&self.base.chat, response)).await.ok();
 
     }
 }

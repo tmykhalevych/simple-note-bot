@@ -1,21 +1,19 @@
-use telegram_bot::{Voice, User, MessageChat, Api, SendMessage};
+use telegram_bot::{Voice, SendMessage};
 use async_trait::async_trait;
-use super::Controller;
+use diesel::PgConnection;
+use super::{Controller, BaseController};
 
-pub struct VoiceController {
+pub struct VoiceController<'a> {
     pub(super) audio: Voice,
-    pub(super) user: User,
-    pub(super) chat: MessageChat,
-    pub(super) api: Api
+    pub(super) base: BaseController<'a>
 }
 
 #[async_trait(?Send)]
-impl<'a> Controller<'a> for VoiceController {
+impl<'a> Controller<'a> for VoiceController<'a> {
     async fn handle(&mut self) {
-        // todo: Implement something more sophisticated
-
-        let user_name = &self.user.first_name;
-        let response = format!("Hey {}! Got your audio message", user_name);
-        self.api.send(SendMessage::new(&self.chat, response)).await.ok();
+        // TODO: implement
+        // 1) get user from db
+        // 2) add voice message to user collection
+        // 3) respond user with correct message
     }
 }
