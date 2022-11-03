@@ -1,6 +1,5 @@
 use telegram_bot::{Voice, SendMessage};
 use async_trait::async_trait;
-use diesel::PgConnection;
 use super::{Controller, BaseController};
 
 pub struct VoiceController<'a> {

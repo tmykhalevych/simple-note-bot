@@ -1,6 +1,6 @@
-
 pub use telegram_bot::*;
 pub use diesel::PgConnection;
+pub use diesel::prelude::*;
 
 pub(super) struct BaseController<'a> {
     pub(super) user: User,

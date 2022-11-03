@@ -50,10 +50,9 @@ impl Builder {
     }
 
     fn on_text<'a>(self, text: String, base: BaseController<'a>) -> Box<dyn Controller<'a> + 'a> {
-        if text.chars().next().unwrap() == '/' {
-            if let Some(command) = Command::from_str(&text).ok() {
-                return Box::new(CommandController { command: command, base: base });
-            }
+        if let Some(command) = Command::from_str(&text).ok() {
+            return Box::new(CommandController { command: command, base: base });
+            // TODO: consider handling unsupported commands here, e.g. reply with proper message
         }
 
         Box::new(TextController { text: text.clone(), base: base })
@@ -64,6 +63,6 @@ impl Builder {
     }
 
     fn default<'a>(self, base: BaseController<'a>) -> Box<dyn Controller<'a> + 'a> {
-        Box::new(DefaultController { base })
+        Box::new(DefaultController { base: base })
     }
 }
