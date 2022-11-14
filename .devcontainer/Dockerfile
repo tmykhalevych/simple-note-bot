@@ -9,7 +9,7 @@ RUN apt-get install -y build-essential curl zsh git wget pkg-config libssl-dev
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | bash -s -- -y
 ENV PATH="/root/.cargo/bin:${PATH}"
 
-RUN apt-get install -y libpq-dev
+RUN apt-get install -y libpq-dev postgresql-client
 RUN cargo install diesel_cli --no-default-features --features postgres
 
 RUN cargo install cargo-modules

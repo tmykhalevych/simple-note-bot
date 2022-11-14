@@ -4,6 +4,11 @@ use diesel::PgConnection;
 use super::{Controller, BaseController};
 pub use std::str::FromStr;
 
+use crate::schema::{*, users::dsl::*};
+use crate::models::{User, NewUser};
+use diesel::RunQueryDsl;
+use diesel::prelude::*;
+
 pub(super) enum Command {
     Start,
     Stop,
@@ -32,11 +37,44 @@ pub struct CommandController<'a> {
 
 impl<'a> CommandController<'a> {
     fn create_user(&mut self) {
-        // TODO: implement
+        let user_id_str = self.base.user.id.to_string();
+        let user = users.filter(external_id.eq(&user_id_str));
+        let res = user.load::<User>(self.base.db).ok();
+        if let Some(user_vec) = res {
+            if !user_vec.is_empty() {
+                // TODO: log here and respond that already started
+                return;
+            }
+        }
+
+        let new_user = NewUser {
+            name: &self.base.user.first_name,
+            external_id: &user_id_str
+        };
+
+        let res = diesel::insert_into(users)
+            .values(new_user)
+            .execute(self.base.db);
+
+        if let Err(err) = res {
+            // TODO: log error here
+            return;
+        }
+
+        // TODO: log and respond with greeting message
     }
 
     fn delete_user(&mut self) {
-        // TODO: implement
+        let user_id_str = self.base.user.id.to_string();
+        let user = users.filter(external_id.eq(user_id_str));
+        let res = diesel::delete(user)
+            .execute(self.base.db);
+
+        if let Err(err) = res {
+            // TODO: log error here
+        }
+
+        // TODO: log and respond with good bye message
     }
 
     fn get_notes_for_today(&mut self) {
