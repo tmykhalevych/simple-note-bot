@@ -1,10 +1,9 @@
-use telegram_bot::SendMessage;
+
 use async_trait::async_trait;
-use diesel::PgConnection;
 use super::{Controller, BaseController};
 pub use std::str::FromStr;
 
-use crate::schema::{*, users::dsl::*};
+use crate::schema::users::dsl::*;
 use crate::models::{User, NewUser};
 use diesel::RunQueryDsl;
 use diesel::prelude::*;
@@ -42,7 +41,8 @@ impl<'a> CommandController<'a> {
         let res = user.load::<User>(self.base.db).ok();
         if let Some(user_vec) = res {
             if !user_vec.is_empty() {
-                // TODO: log here and respond that already started
+                log::warn!("User ({}) has already existed", user_id_str);
+                // TODO: respond that already started
                 return;
             }
         }
@@ -57,24 +57,26 @@ impl<'a> CommandController<'a> {
             .execute(self.base.db);
 
         if let Err(err) = res {
-            // TODO: log error here
+            log::error!("Cannot insert new user ({}). Error: {}", user_id_str, err);
             return;
         }
 
-        // TODO: log and respond with greeting message
+        log::info!("New user ({}) has been added", user_id_str);
+        // TODO: respond with greeting message
     }
 
     fn delete_user(&mut self) {
         let user_id_str = self.base.user.id.to_string();
-        let user = users.filter(external_id.eq(user_id_str));
+        let user = users.filter(external_id.eq(&user_id_str));
         let res = diesel::delete(user)
             .execute(self.base.db);
 
         if let Err(err) = res {
-            // TODO: log error here
+            log::error!("Cannot delete user ({}). Error: {}", user_id_str, err);
         }
 
-        // TODO: log and respond with good bye message
+        log::info!("User ({}) has been deleted", user_id_str);
+        // TODO: respond with good bye message
     }
 
     fn get_notes_for_today(&mut self) {

@@ -2,6 +2,7 @@ mod db;
 mod schema;
 mod models;
 mod controllers;
+mod log;
 
 use dotenv::dotenv;
 use std::env;
@@ -12,6 +13,7 @@ use telegram_bot::*;
 #[tokio::main]
 async fn main() -> Result<(), Error> {
     dotenv().ok();
+    log::init();
 
     let token = env::var("TELEGRAM_BOT_TOKEN").expect("TELEGRAM_BOT_TOKEN not set");
     let api = Api::new(token);
@@ -20,6 +22,7 @@ async fn main() -> Result<(), Error> {
 
     while let Some(update) = stream.next().await {
         let update = update?;
+        log::debug!("New update received: {:?}", &update);
         if let Some(mut controller) = controllers::Builder::new(update).with(&mut db_connection, &api) {
             controller.handle().await;
         }

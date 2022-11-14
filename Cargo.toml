@@ -13,3 +13,5 @@ diesel = { version = "2.0.0", features = ["postgres", "chrono"] }
 dotenv = "0.15.0"
 chrono = "0.4.0"
 async-trait = "0.1.57"
+log = "0.4.17"
+simple_logger = "4.0.0"
