@@ -9,12 +9,16 @@ use text::*;
 use voice::*;
 use command::*;
 use base::*;
+use crate::views::*;
 
 use async_trait::async_trait;
 
 #[async_trait(?Send)]
 pub trait Controller<'a> {
     async fn handle(&mut self);
+    fn get_view(&self) -> Option<Box<dyn View>> {
+        None
+    }
 }
 
 pub struct Builder {

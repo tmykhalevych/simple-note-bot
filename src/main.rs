@@ -2,6 +2,7 @@ mod db;
 mod schema;
 mod models;
 mod controllers;
+mod views;
 mod log;
 
 use dotenv::dotenv;
@@ -25,6 +26,10 @@ async fn main() -> Result<(), Error> {
         log::debug!("New update received: {:?}", &update);
         if let Some(mut controller) = controllers::Builder::new(update).with(&mut db_connection, &api) {
             controller.handle().await;
+            if let Some(view) = controller.get_view() {
+                log::debug!("Applying new view: {:?}", &view);
+                view.render().await;
+            }
         }
     }
 

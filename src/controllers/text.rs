@@ -15,7 +15,6 @@ impl<'a> Controller<'a> for TextController<'a> {
 
         let user_name = &self.base.user.first_name;
         let response = format!("Hey {}! You just wrote '{}'", user_name, &self.text);
-        self.base.api.send(SendMessage::new(&self.base.chat, response)).await.ok();
-
+        self.base.api.send(SendMessage::new(&self.base.chat, response)).await.ok(); 
     }
 }
